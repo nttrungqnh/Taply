@@ -1,0 +1,2 @@
+@model SectionCardViewModel
+<section class="taply-card"><div class="taply-card-heading"><span class="taply-card-icon tone-orange"><i class="bi @Model.Icon"></i></span><div><h2>@Model.Title</h2>@if(!string.IsNullOrWhiteSpace(Model.Subtitle)){<p>@Model.Subtitle}</p>}</div></div>@if(Model.Items.Count>0){<div class="taply-nearby-list">@foreach(var item in Model.Items){<div class="taply-nearby-item"><i class="bi bi-geo-alt"></i><span>@item</span></div>}</div>}else if(!string.IsNullOrWhiteSpace(Model.Text)){<p class="taply-note">@Model.Text</p>}</section>

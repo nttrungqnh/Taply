@@ -1,0 +1,68 @@
+@model Page
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = $"{Model.Name} | Taply";
+    ViewData["MetaDescription"] = Model.Subtitle;
+    ViewData["OgImage"] = Model.CoverImageUrl;
+    var sharedSections = Model.Place?.SharedSections.Where(x => x.IsVisible).OrderBy(x => x.SortOrder).Select(SectionCardViewModel.From).ToList() ?? [];
+    var pageSections = Model.Sections.Where(x => x.IsVisible).OrderBy(x => x.SortOrder).Select(SectionCardViewModel.From).ToList();
+}
+<main class="taply-public">
+    <div class="taply-public-container">
+        <header class="taply-brand" aria-label="Taply"><span>taply</span><b>.</b></header>
+        <section class="taply-hero @(string.IsNullOrWhiteSpace(Model.CoverImageUrl) ? "taply-hero-no-image" : "")">
+            @if (!string.IsNullOrWhiteSpace(Model.CoverImageUrl))
+            {
+                <img class="taply-hero-image" src="@Model.CoverImageUrl" alt="Ảnh @Model.Name" fetchpriority="high">
+            }
+            <div class="taply-hero-copy">
+                <p class="taply-eyebrow">@Model.Place?.Name · @Model.Name</p>
+                <h1>@Model.Name</h1>
+                <p class="taply-subtitle">@(string.IsNullOrWhiteSpace(Model.Subtitle) ? "Thông tin nhanh dành cho khách lưu trú" : Model.Subtitle)</p>
+            </div>
+        </section>
+        @if (sharedSections.Count > 0)
+        {
+            <h2 class="taply-group-heading">Thông tin dùng chung</h2>
+            <div class="taply-section-list">
+            @foreach (var card in sharedSections)
+            {
+                @await Html.PartialAsync(SectionPartial(card.Type), card)
+            }
+            </div>
+        }
+        @if (pageSections.Count > 0)
+        {
+            @if (sharedSections.Count > 0)
+            {
+                <h2 class="taply-group-heading">Thông tin riêng của trang</h2>
+            }
+            <div class="taply-section-list">
+            @foreach (var card in pageSections)
+            {
+                @await Html.PartialAsync(SectionPartial(card.Type), card)
+            }
+            </div>
+        }
+        <footer class="taply-footer">Thông tin được cung cấp bởi <strong>@Model.Place?.Name</strong><br><a href="https://taply.vn" target="_blank" rel="noopener">Tìm hiểu Taply ↗</a></footer>
+    </div>
+    <div id="taplyToast" role="status" aria-live="polite"></div>
+</main>
+@functions {
+    private static string SectionPartial(string type) => type switch
+    {
+        "wifi" => "Sections/_WifiCard",
+        "door_access" => "Sections/_DoorAccessCard",
+        "contact" => "Sections/_ContactCard",
+        "checkout" => "Sections/_CheckoutCard",
+        "checkin" => "Sections/_CheckinCard",
+        "rules" => "Sections/_RulesCard",
+        "instruction" => "Sections/_InstructionCard",
+        "nearby" => "Sections/_NearbyCard",
+        "text" => "Sections/_TextCard",
+        _ => "Sections/_DefaultCard"
+    };
+}
+@section Scripts {
+    <script src="~/js/taply-public.js" asp-append-version="true"></script>
+}

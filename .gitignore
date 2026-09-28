@@ -1,0 +1,15 @@
+# Build output
+bin/
+obj/
+
+# IDE state
+.vs/
+*.user
+*.suo
+
+# Local runtime uploads and logs
+wwwroot/uploads/
+*.log
+
+# Local environment settings
+appsettings.Local.json

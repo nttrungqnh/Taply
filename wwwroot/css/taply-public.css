@@ -1,0 +1,77 @@
+:root{--taply-bg:#F6F7F5;--taply-card:#fff;--taply-text:#161A18;--taply-muted:#747B77;--taply-green:#1FAE9A;--taply-green-soft:#E8F7F2;--taply-blue:#377CF6;--taply-blue-soft:#EAF2FF;--taply-orange:#EF7959;--taply-orange-soft:#FFF0E8;--taply-purple:#7659D5;--taply-purple-soft:#F0ECFF;--taply-yellow:#E7A82F;--taply-yellow-soft:#FFF7DE}
+.taply-public{min-height:100vh;background:var(--taply-bg);color:var(--taply-text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:16px}
+.taply-public-container{max-width:620px;margin:0 auto}
+.taply-brand{display:flex;align-items:baseline;margin:0 0 20px 3px;font-size:26px;line-height:1;font-weight:800;letter-spacing:-1.4px;color:#161a18}
+.taply-brand b{color:var(--taply-green);font-weight:800}
+.taply-hero{position:relative;display:flex;align-items:flex-end;min-height:205px;overflow:hidden;margin-bottom:18px;border-radius:24px;background:#dfe8e2}
+.taply-hero:after{position:absolute;inset:25% 0 0;content:"";background:linear-gradient(0deg,rgba(13,24,19,.76),rgba(13,24,19,0));pointer-events:none}
+.taply-hero-copy{position:relative;z-index:1;width:100%;padding:20px;color:#fff}
+.taply-eyebrow{font-size:12px;font-weight:650;color:rgba(255,255,255,.84);letter-spacing:.02em;margin:0 0 7px}
+.taply-hero h1{font-size:27px;line-height:1.12;letter-spacing:-.8px;font-weight:760;margin:0;text-shadow:0 1px 8px rgba(0,0,0,.14)}
+.taply-subtitle{color:rgba(255,255,255,.9);font-size:14px;line-height:1.45;margin:7px 0 0}
+.taply-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.taply-hero-no-image{min-height:0;padding:18px;background:#e8f3ee}
+.taply-hero-no-image:after{display:none}
+.taply-hero-no-image .taply-hero-copy{padding:0;color:var(--taply-text)}
+.taply-hero-no-image .taply-eyebrow,.taply-hero-no-image .taply-subtitle{color:var(--taply-muted)}
+.taply-hero-no-image h1{text-shadow:none}
+.taply-section-list{display:grid;gap:13px}
+.taply-card{background:var(--taply-card);border-radius:18px;padding:14px 16px;border:1px solid rgba(0,0,0,.045);box-shadow:0 4px 16px rgba(30,40,35,.045);animation:taply-rise .24s ease both}
+.taply-card-heading{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.taply-card-heading h2{font-size:16px;line-height:1.25;font-weight:720;letter-spacing:-.2px;margin:0}
+.taply-card-heading p{font-size:12px;color:var(--taply-muted);line-height:1.35;margin:3px 0 0}
+.taply-card-icon{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:13px;font-size:18px}
+.tone-green{color:#168c79;background:var(--taply-green-soft)}.tone-blue{color:var(--taply-blue);background:var(--taply-blue-soft)}.tone-orange{color:var(--taply-orange);background:var(--taply-orange-soft)}.tone-purple{color:var(--taply-purple);background:var(--taply-purple-soft)}.tone-yellow{color:#ad7b14;background:var(--taply-yellow-soft)}
+.taply-data-list{display:grid;gap:13px;margin:0 1px 16px}
+.taply-data-list>div{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.taply-data-list>div>span{font-size:13px;color:var(--taply-muted)}
+.taply-data-list strong{font-size:15px;line-height:1.35;font-weight:660;text-align:right;overflow-wrap:anywhere}
+.taply-wifi-values{display:grid;gap:7px;margin-left:50px;color:#46524b;font-size:14px;font-weight:550;line-height:1.4;overflow-wrap:anywhere}
+.taply-wifi-field{display:grid;grid-template-columns:90px minmax(0,1fr);align-items:baseline;gap:8px}
+.taply-wifi-field span{color:var(--taply-muted);font-size:12px;font-weight:450}
+.taply-wifi-field strong{font-size:14px;font-weight:650;overflow-wrap:anywhere}
+.taply-wifi-field+ .taply-wifi-field{padding-top:6px;border-top:1px solid #edf0ec}
+.taply-value-action{display:flex;align-items:center;gap:5px}
+.taply-copy-quiet{display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:11px;color:#617069;background:#f2f5f2;font-size:14px;cursor:pointer}
+.taply-action{display:inline-flex;justify-content:center;align-items:center;gap:7px;min-height:42px;padding:0 13px;border:0;border-radius:12px;text-decoration:none;font-family:inherit;font-size:13px;font-weight:650;line-height:1.2;cursor:pointer;transition:background-color .15s,transform .15s}
+.taply-action:active{transform:scale(.98)}
+.taply-action-primary{color:#fff;background:#1c8f7e}.taply-action-primary:hover{color:#fff;background:#167968}
+.taply-action-green{color:#176b5e;background:#e8f7f2}.taply-action-green:hover{color:#135b50;background:#d9f0e8}
+.taply-action-soft{color:#3f5149;background:#f1f4f1}.taply-action-soft:hover{color:#263c32;background:#e8ede8}
+.taply-full-action{width:100%}
+.taply-inline-actions{display:flex;flex-wrap:wrap;gap:9px}
+.taply-inline-actions>.taply-action{flex:1}
+.taply-door-code-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 1px 13px}
+.taply-door-code{font-size:23px;letter-spacing:2px;overflow-wrap:anywhere}
+.taply-note{font-size:13px;line-height:1.5;color:#4e5852;margin:0}
+.taply-checkout-time{display:flex;align-items:center;gap:6px;color:#426d62!important;font-size:14px!important;font-weight:550}
+.taply-checkout-time strong{font-size:16px}
+.taply-bullet-list{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+.taply-bullet-list li{position:relative;padding-left:22px;color:#47514b;font-size:14px;line-height:1.5}
+.taply-bullet-list li:before{content:"";position:absolute;left:2px;top:.57em;width:8px;height:8px;background:#69b5a4;border-radius:50%}
+.taply-steps{counter-reset:taply-step;list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.taply-steps li{counter-increment:taply-step;display:flex;align-items:flex-start;gap:10px;color:#47514b;font-size:14px;line-height:1.5}
+.taply-steps li:before{content:counter(taply-step);display:grid;place-items:center;flex:0 0 24px;width:24px;height:24px;margin-top:-2px;border-radius:8px;background:var(--taply-blue-soft);color:var(--taply-blue);font-size:12px;font-weight:700}
+.taply-expandable{margin-top:12px}
+.taply-expandable>summary{width:max-content;max-width:100%;list-style:none}
+.taply-expandable>summary::-webkit-details-marker{display:none}
+.taply-less{display:none}
+.taply-expandable[open]>.taply-action .taply-more,.taply-expandable[open]>summary .taply-more{display:none}
+.taply-expandable[open]>.taply-action .taply-less,.taply-expandable[open]>summary .taply-less{display:inline}
+.taply-expandable[open] .taply-steps{margin-top:12px}
+.taply-nearby-list{display:grid;gap:10px}
+.taply-nearby-item{display:flex;align-items:flex-start;gap:10px;color:#47514b;font-size:14px;line-height:1.5}
+.taply-nearby-item>i{color:var(--taply-orange);margin-top:2px}
+.taply-section-image{display:block;width:100%;max-height:230px;object-fit:cover;border-radius:16px;margin-top:14px}
+.taply-video-link{display:inline-flex;align-items:center;gap:7px;margin-top:14px;color:#226f62;font-size:14px;font-weight:650;text-decoration:none}
+.taply-footer{text-align:center;padding:23px 8px 5px;color:var(--taply-muted);font-size:12px;line-height:1.8}
+.taply-footer strong{color:#515a55;font-weight:600}
+.taply-footer a{color:#55796f;text-decoration:none}
+#taplyToast{position:fixed;left:50%;bottom:24px;z-index:2100;transform:translate(-50%,12px);opacity:0;pointer-events:none;max-width:calc(100vw - 32px);padding:12px 17px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(24,31,28,.94);color:#fff;font-size:14px;font-weight:550;box-shadow:0 8px 28px rgba(15,25,20,.2);transition:opacity .18s ease,transform .18s ease}
+#taplyToast.is-visible{opacity:1;transform:translate(-50%,0)}
+@keyframes taply-rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.taply-hero{min-height:170px}.taply-hero-copy{padding:15px}.taply-hero h1{font-size:23px}.taply-section-list{gap:10px}.taply-card{padding:12px 14px;border-radius:17px}.taply-card-icon{flex-basis:38px;width:38px;height:38px;border-radius:12px;font-size:17px}.taply-card-heading{margin-bottom:8px}.taply-door-code-row{align-items:flex-start;flex-direction:column}.taply-inline-actions{width:100%}}
+@media(min-width:768px){.taply-public{padding:24px}.taply-brand{margin-bottom:23px}.taply-hero{min-height:240px;margin-bottom:20px}.taply-hero-copy{padding:24px}.taply-hero h1{font-size:30px}.taply-section-list{gap:14px}}
+@media(prefers-reduced-motion:reduce){.taply-card{animation:none}.taply-action,#taplyToast{transition:none}}
+
+.taply-group-heading{margin:16px 2px 9px;color:#56615a;font-size:13px;font-weight:650;letter-spacing:.01em}.taply-group-heading+.taply-section-list{margin-bottom:9px}

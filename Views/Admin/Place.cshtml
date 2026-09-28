@@ -1,0 +1,60 @@
+@model Place
+@using Taply.Models
+@{ ViewData["Title"] = Model.Name; }
+<div class="admin-wrap">
+    <a class="muted" href="/admin/places">← Địa điểm</a>
+    <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+        <div><h1>@Model.Name</h1><p class="muted">Thông tin dùng chung và các trang thuộc địa điểm</p></div>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#pageModal">＋ Tạo trang</button>
+    </div>
+
+    <section class="mb-5">
+        <div class="mb-3"><h2 class="h4 mb-1">Thông tin dùng chung</h2><p class="muted mb-0">Hiển thị trên mọi trang của địa điểm này, ví dụ giờ nhận/trả phòng và nội quy chung.</p></div>
+        <form method="post" action="/admin/place-sections/save" class="admin-card p-4 mb-3">
+            <input type="hidden" name="placeId" value="@Model.Id">
+            <h3 class="h6 mb-3">＋ Thêm thông tin dùng chung</h3>
+            <div class="row g-3">
+                <div class="col-md-4"><label>Loại</label><select name="type" class="form-select"><option value="checkin">Check-in</option><option value="checkout">Check-out</option><option value="rules">Lưu ý / Nội quy</option><option value="contact">Liên hệ</option><option value="text">Văn bản</option></select></div>
+                <div class="col-md-4"><label>Tiêu đề</label><input name="title" class="form-control" required placeholder="Giờ nhận phòng"></div>
+                <div class="col-md-4"><label>Icon</label><input name="icon" class="form-control" value="bi-clock"></div>
+                <div class="col-md-6"><label>Mô tả ngắn</label><input name="subtitle" class="form-control"></div>
+                <div class="col-md-3"><label>Thứ tự hiển thị</label><input name="sortOrder" type="number" min="0" value="@Model.SharedSections.Count" class="form-control"></div>
+                <div class="col-12"><label>Nội dung</label><textarea name="content" class="form-control" rows="3" placeholder="Ví dụ giờ: {&quot;time&quot;:&quot;14:00&quot;,&quot;note&quot;:&quot;Nhận phòng tại quầy lễ tân&quot;}&#10;Ví dụ lưu ý: {&quot;items&quot;:[&quot;Giữ yên tĩnh sau 22:00&quot;]}"></textarea><small class="muted">Giờ nhận/trả phòng dùng JSON gồm time và note. Lưu ý dùng JSON gồm items.</small></div>
+            </div>
+            <button class="btn btn-dark mt-3">Thêm thông tin</button>
+        </form>
+        @if (Model.SharedSections.Count == 0)
+        {
+            <div class="admin-card p-4 muted">Chưa có thông tin dùng chung. Thêm giờ check-in/check-out hoặc lưu ý một lần để dùng trên mọi trang.</div>
+        }
+        @foreach (var sharedSection in Model.SharedSections.OrderBy(x => x.SortOrder))
+        {
+            <details class="admin-card p-3 mb-2">
+                <summary><i class="bi @sharedSection.Icon me-2"></i><strong>@sharedSection.Title</strong><span class="muted ms-2">@sharedSection.Type · thứ tự @sharedSection.SortOrder</span></summary>
+                <form method="post" action="/admin/place-sections/save" class="pt-3">
+                    <input type="hidden" name="placeId" value="@Model.Id"><input type="hidden" name="id" value="@sharedSection.Id">
+                    <div class="row g-2">
+                        <div class="col-md-4"><label>Loại</label><select name="type" class="form-select"><option value="checkin" selected="@(sharedSection.Type == "checkin")">Check-in</option><option value="checkout" selected="@(sharedSection.Type == "checkout")">Check-out</option><option value="rules" selected="@(sharedSection.Type == "rules")">Lưu ý / Nội quy</option><option value="contact" selected="@(sharedSection.Type == "contact")">Liên hệ</option><option value="text" selected="@(sharedSection.Type == "text")">Văn bản</option></select></div>
+                        <div class="col-md-5"><label>Tiêu đề</label><input name="title" class="form-control" value="@sharedSection.Title" required></div>
+                        <div class="col-md-3"><label>Thứ tự</label><input name="sortOrder" type="number" min="0" class="form-control" value="@sharedSection.SortOrder"></div>
+                        <div class="col-md-6"><label>Mô tả ngắn</label><input name="subtitle" class="form-control" value="@sharedSection.Subtitle"></div>
+                        <div class="col-md-6"><label>Icon</label><input name="icon" class="form-control" value="@sharedSection.Icon"></div>
+                        <div class="col-12"><label>Nội dung (JSON hoặc văn bản)</label><textarea name="content" class="form-control" rows="3">@sharedSection.Content</textarea></div>
+                        <div class="col-12 form-check ms-2"><input type="checkbox" name="isVisible" value="true" class="form-check-input" checked="@sharedSection.IsVisible"><input type="hidden" name="isVisible" value="false"><label class="form-check-label">Hiển thị trên các trang</label></div>
+                    </div>
+                    <button class="btn btn-dark btn-sm mt-3">Lưu thay đổi</button>
+                </form>
+                <form method="post" action="/admin/place-sections/@sharedSection.Id/delete" class="mt-2" onsubmit="return confirm('Xóa thông tin dùng chung này khỏi tất cả trang?')"><input type="hidden" name="placeId" value="@Model.Id"><button class="btn btn-outline-danger btn-sm">Xóa</button></form>
+            </details>
+        }
+    </section>
+
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-3"><div><h2 class="h4 mb-1">Các trang riêng</h2><p class="muted mb-0">Wi-Fi, mã cửa và nội dung chỉ áp dụng cho từng trang.</p></div></div>
+        <div class="row g-3">@foreach (var pageItem in Model.Pages.OrderBy(x => x.SortOrder))
+        {
+            <div class="col-md-6"><div class="admin-card p-4 d-flex justify-content-between align-items-center"><div><h4>@pageItem.Name</h4><span class="muted">/p/@pageItem.Slug</span></div><div class="d-flex gap-2"><a class="btn btn-light btn-sm" href="/p/@pageItem.Slug" target="_blank">Mở</a><a class="btn btn-dark btn-sm" href="/admin/pages/@pageItem.Id/edit">Chỉnh sửa</a></div></div></div>
+        }</div>
+    </section>
+</div>
+<div class="modal fade" id="pageModal"><div class="modal-dialog"><form class="modal-content" method="post" action="/admin/pages/save"><input type="hidden" name="placeId" value="@Model.Id"><div class="modal-header"><h5>Tạo trang mới</h5><button class="btn-close" data-bs-dismiss="modal" type="button"></button></div><div class="modal-body"><label>Tên trang</label><input name="name" class="form-control mb-3" required><label>Mô tả ngắn</label><input name="subtitle" class="form-control mb-3"><input name="isActive" type="hidden" value="true"><p class="muted">Slug sẽ được tạo tự động.</p></div><div class="modal-footer"><button class="btn btn-dark">Tạo trang</button></div></form></div></div>

@@ -1,0 +1,2 @@
+@model SectionCardViewModel
+<section class="taply-card"><div class="taply-card-heading"><span class="taply-card-icon tone-blue"><i class="bi @Model.Icon"></i></span><div><h2>@Model.Title</h2>@if(!string.IsNullOrWhiteSpace(Model.CheckoutTime)){<p class="taply-checkout-time"><i class="bi bi-clock"></i> Trả phòng trước <strong>@Model.CheckoutTime</strong></p>}</div></div>@if(!string.IsNullOrWhiteSpace(Model.Note)){<p class="taply-note">@Model.Note</p>}else if(!string.IsNullOrWhiteSpace(Model.Text)){<p class="taply-note">@Model.Text</p>}</section>

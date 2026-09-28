@@ -1,0 +1,75 @@
+@model Page
+@using System.Text.Json
+@inject IConfiguration Configuration
+@{ ViewData["Title"]="Chỉnh sửa · "+Model.Name; }
+<div class="admin-wrap"><a href="/admin/places/@Model.PlaceId" class="muted">← @Model.Place?.Name</a><div class="editor-grid mt-3"><section><h1>Chỉnh sửa trang</h1><form method="post" action="/admin/pages/save" enctype="multipart/form-data" class="admin-card p-4 mb-4"><input type="hidden" name="id" value="@Model.Id"><input type="hidden" name="placeId" value="@Model.PlaceId"><h5>Thông tin chung</h5><label>Tên trang</label><input name="name" class="form-control mb-3" value="@Model.Name" required><label>Slug</label><input name="slug" class="form-control mb-3" value="@Model.Slug"><label>Mô tả ngắn</label><input name="subtitle" class="form-control mb-3" value="@Model.Subtitle"><label>Ảnh cover</label><input type="file" name="cover" accept="image/jpeg,image/png,image/webp" class="form-control mb-3"><div class="form-check"><input class="form-check-input" type="checkbox" name="isActive" value="true" checked="@Model.IsActive"><label class="form-check-label">Trang đang hoạt động</label></div><button class="btn btn-dark mt-3">Lưu thông tin</button></form>
+<div class="d-flex justify-content-between mb-3"><div><h3 class="mb-1">Nội dung trang</h3><small id="orderStatus" class="muted">Kéo biểu tượng ⠿ để sắp xếp</small></div><button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#sectionModal">＋ Thêm nội dung</button></div><div id="sectionList">@foreach(var s in Model.Sections.OrderBy(x=>x.SortOrder)){<details class="admin-card section-item p-3 mb-2" data-id="@s.Id"><summary><span class="section-drag-handle" title="Kéo để thay đổi thứ tự" aria-label="Kéo để thay đổi thứ tự">⠿</span><i class="bi @s.Icon me-2"></i><b>@s.Title</b><span class="muted ms-2">@s.Type</span></summary><div class="section-move-actions"><button type="button" class="btn btn-sm btn-light" data-move="up">↑ Lên</button><button type="button" class="btn btn-sm btn-light" data-move="down">↓ Xuống</button></div><form method="post" action="/admin/sections/save" enctype="multipart/form-data" class="pt-3"><input type="hidden" name="pageId" value="@Model.Id"><input type="hidden" name="id" value="@s.Id"><div class="row g-2"><div class="col-md-6"><label>Loại</label><select name="type" class="form-select"><option selected value="@s.Type">@s.Type</option><option>wifi</option><option>door_access</option><option>instruction</option><option>rules</option><option>contact</option><option>checkout</option><option>nearby</option><option>text</option><option>custom</option></select></div><div class="col-md-6"><label>Icon (Bootstrap Icons)</label><input name="icon" value="@s.Icon" class="form-control"></div><div class="col-12"><label>Tiêu đề</label><input name="title" value="@s.Title" class="form-control" required></div><div class="col-12"><label>Mô tả</label><input name="subtitle" value="@s.Subtitle" class="form-control"></div><div class="col-md-4"><label>Thứ tự hiển thị</label><input name="sortOrder" value="@s.SortOrder" type="number" min="0" class="form-control"></div>@if(s.Type=="wifi"){var wifi=SectionCardViewModel.From(s);<div class="col-md-6"><label>Tên mạng Wi-Fi (SSID)</label><input name="wifiSsid" value="@wifi.Ssid" class="form-control" autocomplete="off"></div><div class="col-md-6"><label>Mật khẩu Wi-Fi</label><input name="wifiPassword" value="@wifi.Password" class="form-control" autocomplete="off"></div>}else if(s.Type=="contact"){var contact=SectionCardViewModel.From(s);<div class="col-md-6"><label>Số điện thoại gọi</label><input name="contactPhone" value="@contact.Phone" class="form-control" type="tel" placeholder="0912 345 678"></div><div class="col-md-6"><label>Số điện thoại Zalo</label><input name="contactZalo" value="@contact.Zalo" class="form-control" type="tel" placeholder="Để trống để dùng số gọi"></div><div class="col-12"><label>Liên kết Zalo (tùy chọn)</label><input name="contactZaloUrl" value="@contact.ZaloUrl" class="form-control" type="url" placeholder="https://zalo.me/..."></div><div class="col-12"><label>Ghi chú</label><input name="contactNote" value="@contact.Note" class="form-control"></div>}else{<div class="col-12"><label>Nội dung (văn bản hoặc JSON)</label><textarea name="content" class="form-control" rows="4">@s.Content</textarea></div>}<div class="col-md-6"><label>Ảnh minh họa</label><input type="file" name="image" accept="image/*" class="form-control"></div><div class="col-md-6"><label>Video URL</label><input name="videoUrl" value="@s.VideoUrl" class="form-control"></div></div><button class="btn btn-dark btn-sm mt-3">Lưu nội dung</button></form><form method="post" action="/admin/sections/@s.Id/delete" class="mt-2" onsubmit="return confirm('Xóa nội dung này?')"><input name="pageId" type="hidden" value="@Model.Id"><button class="btn btn-sm btn-outline-danger">Xóa nội dung</button></form></details>}</div>
+<div class="admin-card p-4 mt-4"><h3>Mã QR</h3><div class="d-flex gap-4 align-items-center flex-wrap"><img width="150" src="/qr/@Model.Slug" alt="QR code"><div><p class="mb-3" id="publicUrl">@(Configuration["PublicBaseUrl"]?.TrimEnd('/') ?? $"{Context.Request.Scheme}://{Context.Request.Host}")/p/@Model.Slug</p><a class="btn btn-dark btn-sm" href="/qr/@Model.Slug" download="taply-@(Model.Slug).png">Tải QR PNG</a><button class="btn btn-light btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('publicUrl').textContent)">Sao chép link</button><a class="btn btn-light btn-sm" target="_blank" href="@(Configuration["PublicBaseUrl"]?.TrimEnd('/') ?? "")/p/@Model.Slug">Mở trang</a></div></div></div>
+</section><aside class="preview-column"><div class="preview-label">XEM TRƯỚC</div><iframe title="Xem trước trang công khai" src="/p/@Model.Slug"></iframe><button class="btn btn-light w-100 mt-2" onclick="document.querySelector('iframe').contentWindow.location.reload()">Làm mới bản xem trước</button></aside></div></div>
+<div class="modal fade" id="sectionModal"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5>Thêm nội dung</h5><button class="btn-close" data-bs-dismiss="modal" type="button"></button></div><div class="modal-body"><div class="template-grid">@foreach(var x in new[]{("wifi","Wi-Fi","bi-wifi","{\"ssid\":\"\",\"password\":\"\"}"),("instruction","Hướng dẫn thiết bị","bi-projector","{\"steps\":[]}"),("rules","Nội quy","bi-card-checklist","{\"items\":[]}"),("contact","Liên hệ","bi-telephone","{}"),("checkout","Check-out","bi-door-open",""),("nearby","Địa điểm gần đây","bi-geo-alt","{\"items\":[]}"),("text","Văn bản","bi-card-text",""),("custom","Nội dung tùy chỉnh","bi-stars","")}){<form method="post" action="/admin/sections/save"><input name="pageId" type="hidden" value="@Model.Id"><input name="type" type="hidden" value="@x.Item1"><input name="title" type="hidden" value="@x.Item2"><input name="icon" type="hidden" value="@x.Item3"><input name="content" type="hidden" value="@x.Item4"><input name="subtitle" type="hidden" value=""><button class="template-choice" type="submit"><i class="bi @x.Item3"></i><span>@x.Item2</span><i class="bi bi-plus ms-auto"></i></button></form>}</div></div></div></div></div>
+<script>
+(() => {
+    const list = document.getElementById('sectionList');
+    const status = document.getElementById('orderStatus');
+    let draggedItem = null;
+
+    async function saveOrder() {
+        if (!list) return;
+        const ids = [...list.querySelectorAll('.section-item')].map(item => Number(item.dataset.id));
+        if (status) status.textContent = 'Đang lưu thứ tự…';
+        try {
+            const response = await fetch('/admin/sections/order?pageId=@Model.Id', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(ids)
+            });
+            if (!response.ok) throw new Error('Save order failed');
+            if (status) status.textContent = 'Đã lưu thứ tự';
+        } catch {
+            if (status) status.textContent = 'Không lưu được thứ tự. Hãy tải lại trang và thử lại.';
+        }
+    }
+
+    list?.querySelectorAll('.section-item').forEach(item => {
+        item.draggable = true;
+        item.addEventListener('dragstart', event => {
+            if (!event.target.closest('.section-drag-handle')) {
+                event.preventDefault();
+                return;
+            }
+            draggedItem = item;
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', item.dataset.id);
+            item.classList.add('is-dragging');
+        });
+        item.addEventListener('dragend', () => item.classList.remove('is-dragging'));
+        item.addEventListener('dragover', event => {
+            if (!draggedItem || draggedItem === item) return;
+            event.preventDefault();
+            const before = event.clientY < item.getBoundingClientRect().top + item.offsetHeight / 2;
+            list.insertBefore(draggedItem, before ? item : item.nextElementSibling);
+        });
+    });
+
+    list?.addEventListener('dragover', event => event.preventDefault());
+    list?.addEventListener('drop', async event => {
+        event.preventDefault();
+        if (!draggedItem) return;
+        draggedItem.classList.remove('is-dragging');
+        draggedItem = null;
+        await saveOrder();
+    });
+    list?.addEventListener('click', async event => {
+        const button = event.target.closest('[data-move]');
+        if (!button) return;
+        const item = button.closest('.section-item');
+        if (!item) return;
+        if (button.dataset.move === 'up' && item.previousElementSibling) {
+            list.insertBefore(item, item.previousElementSibling);
+        } else if (button.dataset.move === 'down' && item.nextElementSibling) {
+            list.insertBefore(item.nextElementSibling, item);
+        } else return;
+        await saveOrder();
+    });
+})();
+</script>
